@@ -1,0 +1,68 @@
+> # Assignment: ASSIGNMENT 2 _ Test Scores
+> # Name: Karna, Rajasekhar Reddy
+> # Date: 2020-09-13
+> 
+> ## Read Test Scores file
+> setwd("C:/Users/vahin/Documents/GitHub/dsc520/")
+> test_scores <- read.csv("data/scores.csv", header = TRUE)
+> 
+> ## Examine the structure and display summary statistics
+> str(test_scores)
+'data.frame':	38 obs. of  3 variables:
+ $ Count  : int  10 10 20 10 10 10 10 30 10 10 ...
+ $ Score  : int  200 205 235 240 250 265 275 285 295 300 ...
+ $ Section: chr  "Sports" "Sports" "Sports" "Sports" ...
+> summary(test_scores)
+     Count           Score         Section         
+ Min.   :10.00   Min.   :200.0   Length:38         
+ 1st Qu.:10.00   1st Qu.:300.0   Class :character  
+ Median :10.00   Median :322.5   Mode  :character  
+ Mean   :14.47   Mean   :317.5                     
+ 3rd Qu.:20.00   3rd Qu.:357.5                     
+ Max.   :30.00   Max.   :395.0                     
+> 
+> ## Assigning veriable based on student Sections and display summary statistics
+> sports_students <- subset(test_scores, Section == "Sports")
+> regular_students <- subset(test_scores, Section == "Regular")
+> summary(sports_students)
+     Count           Score         Section         
+ Min.   :10.00   Min.   :200.0   Length:19         
+ 1st Qu.:10.00   1st Qu.:267.5   Class :character  
+ Median :10.00   Median :315.0   Mode  :character  
+ Mean   :13.68   Mean   :307.4                     
+ 3rd Qu.:15.00   3rd Qu.:350.0                     
+ Max.   :30.00   Max.   :395.0                     
+> summary(regular_students)
+     Count           Score         Section         
+ Min.   :10.00   Min.   :265.0   Length:19         
+ 1st Qu.:10.00   1st Qu.:305.0   Class :character  
+ Median :10.00   Median :325.0   Mode  :character  
+ Mean   :15.26   Mean   :327.6                     
+ 3rd Qu.:20.00   3rd Qu.:355.0                     
+ Max.   :30.00   Max.   :380.0                     
+> 
+> ## Import Plot library and Plot data based on sections
+> ## For installation of ggplot2 package, used install.packages("ggplot2")
+> library(ggplot2)
+> Section_Based_Histogram_Plot <- ggplot(data = test_scores, aes(x = Score, fill = Section)) + 
++   geom_histogram(bins = 30, color = "white") + 
++   ggtitle("Grades by Section")
+> Section_Based_Histogram_Plot
+> 
+> ## Comparing score distribution between Sports and Regular sections
+> mean(sports_students$Score) < mean(regular_students$Score)
+[1] TRUE
+> median(sports_students$Score) < median(regular_students$Score)
+[1] TRUE
+> 
+> ## Read the file `data/scores.csv` to `scores_df`
+> ## Display summary statistics using the `summary()` function
+> scores_df <- read.csv("data/scores.csv", stringsAsFactors = FALSE)
+> summary(scores_df)
+     Count           Score         Section         
+ Min.   :10.00   Min.   :200.0   Length:38         
+ 1st Qu.:10.00   1st Qu.:300.0   Class :character  
+ Median :10.00   Median :322.5   Mode  :character  
+ Mean   :14.47   Mean   :317.5                     
+ 3rd Qu.:20.00   3rd Qu.:357.5                     
+ Max.   :30.00   Max.   :395.0  
