@@ -50,3 +50,4 @@ ggplot(heights_df, aes(earn)) + geom_histogram(bins = 10, color = "white")
 ## Create a kernel density plot of `earn` using `geom_density()`
 ggplot(heights_df, aes(earn)) +  geom_density(aes(x=earn), fill="white", color = "red")
 
+install.packages("tinytex")
