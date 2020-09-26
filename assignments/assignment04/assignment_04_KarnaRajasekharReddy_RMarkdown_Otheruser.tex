@@ -1,0 +1,301 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+]{article}
+\usepackage{lmodern}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math}
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\hypersetup{
+  pdftitle={Assignment 4},
+  pdfauthor={Michael Hotaling},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+\urlstyle{same} % disable monospaced font for URLs
+\usepackage[margin=1in]{geometry}
+\usepackage{longtable,booktabs}
+% Correct order of tables after \paragraph or \subparagraph
+\usepackage{etoolbox}
+\makeatletter
+\patchcmd\longtable{\par}{\if@noskipsec\mbox{}\fi\par}{}{}
+\makeatother
+% Allow footnotes in longtable head/foot
+\IfFileExists{footnotehyper.sty}{\usepackage{footnotehyper}}{\usepackage{footnote}}
+\makesavenoteenv{longtable}
+\usepackage{graphicx,grffile}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+% Set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+
+\title{Assignment 4}
+\author{Michael Hotaling}
+\date{2020-09-22}
+
+\begin{document}
+\maketitle
+
+\hypertarget{markdown-basics}{%
+\subsection{Markdown Basics}\label{markdown-basics}}
+
+\hypertarget{favorite-foods}{%
+\subsection{Favorite Foods}\label{favorite-foods}}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Pizza
+\item
+  Tacos
+\item
+  Pad Thai
+\end{enumerate}
+
+\hypertarget{images}{%
+\subsection{Images}\label{images}}
+
+\begin{figure}
+\centering
+\includegraphics[width=0.4\textwidth,height=\textheight]{"MFW.jpg"}
+\caption{Me}
+\end{figure}
+
+\hypertarget{add-a-quote}{%
+\subsection{Add a Quote}\label{add-a-quote}}
+
+\begin{quote}
+The path of the righteous man is beset on all sides by the Inequities of
+the selfish and the tyranny of evil men Blessed is he who, in the name
+of charity and good will shepherds the weak through the valley of
+darkness for he is truly his brother's keeper and the finder of lost
+children And I will strike down upon thee with great vengeance and
+furious Anger those who attempt to poison and destroy my brothers And
+you will know My name is the Lord when I lay my vengeance upon thee.
+Ezekiel 25:17 Add an Equation --- \begin{equation}
+\Pr(A|B)=\frac{\Pr(B|A)\Pr(A)}{\Pr(B|A)\Pr(A)+\Pr(B|\neg A)\Pr(\neg A)}
+\end{equation}
+\end{quote}
+
+\hypertarget{add-a-footnote}{%
+\subsection{Add a Footnote}\label{add-a-footnote}}
+
+A footnote will follow.\footnote{This is a footnote.}
+
+\hypertarget{add-citations}{%
+\subsection{Add Citations}\label{add-citations}}
+
+\begin{itemize}
+\tightlist
+\item
+  R for Everyone Lander (2014)
+\item
+  Discovering Statistics Using R Field, Miles, and Field (2012)
+\end{itemize}
+
+\hypertarget{inline-code}{%
+\subsection{Inline Code}\label{inline-code}}
+
+2 plus 2 is equal to 4
+
+\includegraphics{assignment_04_KarnaRajasekharReddy_RMarkdown_Otheruser_files/figure-latex/unnamed-chunk-1-1.pdf}
+
+\hypertarget{r4ds-heights-vs-earnings}{%
+\subsection{R4DS Heights vs Earnings}\label{r4ds-heights-vs-earnings}}
+
+\includegraphics{assignment_04_KarnaRajasekharReddy_RMarkdown_Otheruser_files/figure-latex/unnamed-chunk-2-1.pdf}
+
+\hypertarget{tables}{%
+\subsection{Tables}\label{tables}}
+
+\hypertarget{knitr-table-with-kable}{%
+\subsection{Knitr Table with Kable}\label{knitr-table-with-kable}}
+
+\begin{longtable}[]{@{}llllr@{}}
+\caption{One Ring to Rule Them All}\tabularnewline
+\toprule
+name & race & in\_fellowship & ring\_bearer & age\tabularnewline
+\midrule
+\endfirsthead
+\toprule
+name & race & in\_fellowship & ring\_bearer & age\tabularnewline
+\midrule
+\endhead
+Aragon & Men & TRUE & FALSE & 88\tabularnewline
+Bilbo & Hobbit & FALSE & TRUE & 129\tabularnewline
+Frodo & Hobbit & TRUE & TRUE & 51\tabularnewline
+Galadriel & Elf & FALSE & FALSE & 7000\tabularnewline
+Sam & Hobbit & TRUE & TRUE & 36\tabularnewline
+Gandalf & Maia & TRUE & TRUE & 2019\tabularnewline
+Legolas & Elf & TRUE & FALSE & 2931\tabularnewline
+Sauron & Maia & FALSE & TRUE & 7052\tabularnewline
+Gollum & Hobbit & FALSE & TRUE & 589\tabularnewline
+\bottomrule
+\end{longtable}
+
+\hypertarget{pandoc-table-using-pander}{%
+\subsection{Pandoc Table (using
+pander)}\label{pandoc-table-using-pander}}
+
+\begin{longtable}[]{@{}ccccc@{}}
+\caption{The Lord of the Rings}\tabularnewline
+\toprule
+\begin{minipage}[b]{0.11\columnwidth}\centering
+Name\strut
+\end{minipage} & \begin{minipage}[b]{0.11\columnwidth}\centering
+Race\strut
+\end{minipage} & \begin{minipage}[b]{0.20\columnwidth}\centering
+In Fellowship?\strut
+\end{minipage} & \begin{minipage}[b]{0.21\columnwidth}\centering
+Is Ring Bearer?\strut
+\end{minipage} & \begin{minipage}[b]{0.08\columnwidth}\centering
+Age\strut
+\end{minipage}\tabularnewline
+\midrule
+\endfirsthead
+\toprule
+\begin{minipage}[b]{0.11\columnwidth}\centering
+Name\strut
+\end{minipage} & \begin{minipage}[b]{0.11\columnwidth}\centering
+Race\strut
+\end{minipage} & \begin{minipage}[b]{0.20\columnwidth}\centering
+In Fellowship?\strut
+\end{minipage} & \begin{minipage}[b]{0.21\columnwidth}\centering
+Is Ring Bearer?\strut
+\end{minipage} & \begin{minipage}[b]{0.08\columnwidth}\centering
+Age\strut
+\end{minipage}\tabularnewline
+\midrule
+\endhead
+\begin{minipage}[t]{0.11\columnwidth}\centering
+Aragon\strut
+\end{minipage} & \begin{minipage}[t]{0.11\columnwidth}\centering
+Men\strut
+\end{minipage} & \begin{minipage}[t]{0.20\columnwidth}\centering
+Yes\strut
+\end{minipage} & \begin{minipage}[t]{0.21\columnwidth}\centering
+No\strut
+\end{minipage} & \begin{minipage}[t]{0.08\columnwidth}\centering
+88\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.11\columnwidth}\centering
+Bilbo\strut
+\end{minipage} & \begin{minipage}[t]{0.11\columnwidth}\centering
+Hobbit\strut
+\end{minipage} & \begin{minipage}[t]{0.20\columnwidth}\centering
+No\strut
+\end{minipage} & \begin{minipage}[t]{0.21\columnwidth}\centering
+Yes\strut
+\end{minipage} & \begin{minipage}[t]{0.08\columnwidth}\centering
+129\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.11\columnwidth}\centering
+Frodo\strut
+\end{minipage} & \begin{minipage}[t]{0.11\columnwidth}\centering
+Hobbit\strut
+\end{minipage} & \begin{minipage}[t]{0.20\columnwidth}\centering
+Yes\strut
+\end{minipage} & \begin{minipage}[t]{0.21\columnwidth}\centering
+Yes\strut
+\end{minipage} & \begin{minipage}[t]{0.08\columnwidth}\centering
+51\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.11\columnwidth}\centering
+Sam\strut
+\end{minipage} & \begin{minipage}[t]{0.11\columnwidth}\centering
+Hobbit\strut
+\end{minipage} & \begin{minipage}[t]{0.20\columnwidth}\centering
+Yes\strut
+\end{minipage} & \begin{minipage}[t]{0.21\columnwidth}\centering
+Yes\strut
+\end{minipage} & \begin{minipage}[t]{0.08\columnwidth}\centering
+36\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.11\columnwidth}\centering
+Sauron\strut
+\end{minipage} & \begin{minipage}[t]{0.11\columnwidth}\centering
+Maia\strut
+\end{minipage} & \begin{minipage}[t]{0.20\columnwidth}\centering
+No\strut
+\end{minipage} & \begin{minipage}[t]{0.21\columnwidth}\centering
+Yes\strut
+\end{minipage} & \begin{minipage}[t]{0.08\columnwidth}\centering
+7052\strut
+\end{minipage}\tabularnewline
+\bottomrule
+\end{longtable}
+
+\hypertarget{pandoc-table-with-manual-inputs}{%
+\subsection{Pandoc Table (with manual
+inputs)}\label{pandoc-table-with-manual-inputs}}
+
+\begin{longtable}[]{@{}lcccr@{}}
+\toprule
+Name & Race & In Fellowship? & Is Ring Bearer? & Age\tabularnewline
+\midrule
+\endhead
+Aragon & Men & Yes & No & 88\tabularnewline
+Bilbo & Hobbit & No & Yes & 129\tabularnewline
+Frodo & Hobbit & Yes & Yes & 51\tabularnewline
+Sam & Hobbit & Yes & Yes & 36\tabularnewline
+Sauron & Maia & No & Yes & 7052\tabularnewline
+\bottomrule
+\end{longtable}
+
+\hypertarget{references}{%
+\section*{References}\label{references}}
+\addcontentsline{toc}{section}{References}
+
+\hypertarget{refs}{}
+\leavevmode\hypertarget{ref-field2012discovering}{}%
+Field, A., J. Miles, and Z. Field. 2012. \emph{Discovering Statistics
+Using R}. SAGE Publications.
+\url{https://books.google.com/books?id=wd2K2zC3swIC}.
+
+\leavevmode\hypertarget{ref-lander2014r}{}%
+Lander, J. P. 2014. \emph{R for Everyone: Advanced Analytics and
+Graphics}. Addison-Wesley Data and Analytics Series. Addison-Wesley.
+\url{https://books.google.com/books?id=3eBVAgAAQBAJ}.
+
+\end{document}

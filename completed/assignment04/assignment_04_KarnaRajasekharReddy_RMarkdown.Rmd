@@ -102,14 +102,9 @@ kable(characters_df, title = "One Ring to Rule Them All", caption = "One Ring to
 ## Pandoc Table
 ```{r echo= FALSE, message=FALSE, warning=FALSE}
 library(pander)
-library(tinytex)
-library(latexpdf)
-library(knitr)
 setwd("C:/Users/vahin/Documents/GitHub/dsc520/assignments/assignment04/")
 pandoc.table(caption = "The Lord of the Rings", characters_df, keep.line = TRUE, style = 'grid')
 ```
-
-
 
 
 # References
