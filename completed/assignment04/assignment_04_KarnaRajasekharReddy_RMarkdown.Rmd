@@ -1,0 +1,119 @@
+---
+title: "ASSIGNMENT 4"
+author: "Rajasekhar Reddy Karna"
+date: '2020-09-23'
+output:
+  word_document: default
+  html_document: default
+  pdf_document: default
+bibliography: bibliography.bib
+---
+## Markdown Basics
+
+R provides authoring framework for Data Science. Users can use Markdowns to connect to data and run code. Also generates high quality reports to share with audience. 
+
+R Markdown is plain text file with extension as .Rmd. It has 3 types of content:
+- Code chunks to run
+- Text to display
+- Metadata to guide build process
+
+Users can customize code on how text to display or parameterize to use in render time.
+
+R Markdown support dozens of static and dynamic output formats, such as HTML, pdf, word, slide shows, notebook, latex, etc...Easy to track  in version control tools like GIT and easy to deploy.
+
+## Favorite Foods
+- Biryani
+- American / Italian food
+- Thai food
+
+## Images
+![All Cases (Log Plot)](C:/Users/vahin/Documents/GitHub/dsc520/completed/assignment04/plots/10-all-cases-log.png)
+
+
+## Add a Quote
+
+Life is full of emotions. Give a touch of positive hope to add smile to those emotions!
+
+## Add an Equation
+
+$\begin{equation}
+ \frac{1}{\sqrt x}
+\end{equation}$
+
+## Add a Footnote
+
+Summary always makes easy to understand.
+
+## Add Citations
+
+* R for Everyone. Pearson Education, 2017. 2nd Edition.
+* Discovering Statistics Using R. Sage Publications, 2012. 
+
+## Inline Code
+
+```{r include=FALSE}
+library(ggplot2)
+theme_set(theme_minimal())
+setwd("C:/Users/vahin/Documents/GitHub/dsc520/")
+heights_df <- read.csv("data/r4ds/heights.csv")
+covid_df <- read.csv("data/nytimes/covid-19-data/us-states.csv")
+covid_df$date <- as.Date(covid_df$date)
+california_df <- covid_df[ which( covid_df$state == "California"), ]
+ny_df <- covid_df[ which( covid_df$state == "New York"), ]
+florida_df <- covid_df[ which( covid_df$state == "Florida"), ]
+```
+
+
+## NY Times COVID-19 Data
+```{r echo=FALSE}
+ggplot(data=florida_df, aes(x=date, group=1)) +
+  geom_line(aes(y = cases, colour = "Florida")) +
+  geom_line(data=ny_df, aes(y = cases,colour="New York")) +
+  geom_line(data=california_df, aes(y = cases, colour="California")) +
+  scale_colour_manual("",
+                      breaks = c("Florida", "New York", "California"),
+                      values = c("darkred", "darkgreen", "steelblue")) +
+  xlab(" ") + ylab("Cases") + scale_y_log10()
+```
+
+## R4DS Height vs Earnings
+```{r echo=FALSE}
+ggplot(heights_df, aes(x=height, y=earn, col=height,earn)) + geom_point(aes(color=sex)) + ggtitle("Height vs. Earnings") + xlab("Height (Inches)") + ylab("Earnings (Dollars)")
+```
+
+# Tables
+
+## Knitr Table with Kable
+
+```{r echo=FALSE}
+library(knitr)
+library(latexpdf)
+library(tinytex)
+name <- c("Aragon", "Bilbo", "Frodo", "Galadriel", "Sam", "Gandalf", "Legolas", "Sauron", "Gollum")
+race <- c("Men", "Hobbit", "Hobbit", "Elf", "Hobbit", "Maia", "Elf", "Maia", "Hobbit")
+in_fellowship <- c(TRUE, FALSE, TRUE, FALSE, TRUE, TRUE, TRUE, FALSE, FALSE)
+ring_bearer <- c(FALSE, TRUE, TRUE, FALSE, TRUE, TRUE, FALSE, TRUE, TRUE)
+age <- c(88, 129, 51, 7000, 36, 2019, 2931, 7052, 589)
+
+characters_df <- data.frame(name, race, in_fellowship, ring_bearer, age)
+kable(characters_df, title = "One Ring to Rule Them All", caption = "One Ring to Rule Them All" )
+```
+
+## Pandoc Table
+```{r echo= FALSE, message=FALSE, warning=FALSE}
+library(pander)
+library(tinytex)
+library(latexpdf)
+library(knitr)
+setwd("C:/Users/vahin/Documents/GitHub/dsc520/assignments/assignment04/")
+pandoc.table(caption = "The Lord of the Rings", characters_df, keep.line = TRUE, style = 'grid')
+```
+
+
+
+
+# References
+https://rmarkdown.rstudio.com/lesson-1.html   --- R Markdown basics
+R for Everyone. Pearson Education, 2017. 2nd Edition.
+https://rstudio.com/wp-content/uploads/2016/03/rmarkdown-cheatsheet-2.0.pdf?_ga=2.247973831.1388722509.1600630414-1304384236.1598891840 -- R Markdown cheat sheet for reference.
+Slake for students feedback and reference comments.
