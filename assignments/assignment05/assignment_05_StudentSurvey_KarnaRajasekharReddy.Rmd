@@ -1,0 +1,132 @@
+---
+title: "ASSIGNMENT 5 STUDENT SURVEY"
+author: "Rajasekhar Reddy Karna"
+date: '2020-10-03'
+output:
+  pdf_document: default
+  html_document: default
+  word_document: default
+---
+
+As a data science intern with newly learned knowledge in skills in statistical correlation and R programming, you will analyze the results of a survey recently given to college students. You learn that the research question being investigated is: “Is there a significant relationship between the amount of time spent reading and the time spent watching television?” You are also interested if there are other significant relationships that can be discovered? The survey data is located in this StudentSurvey.csv file.
+
+```{r include=FALSE}
+library(pander)
+library(knitr)
+library(ggplot2)
+library(latexpdf)
+library(tinytex)
+library(psych)
+theme_set(theme_minimal())
+setwd("C:/Users/vahin/Documents/GitHub/dsc520/")
+student_df <- read.csv("data/student-survey.csv")
+```
+
+```{r, echo = FALSE}
+      kable(student_df, align = "c", caption = "Student Survey")
+```
+
+**a. Use R to calculate the covariance of the Survey variables and provide an explanation of why you would use this calculation and what the results indicate.**
+
+```{r, echo = FALSE}
+      kable (cov(student_df), caption = "Covariance Matrix for Student Survey data set")
+```
+**Calculating the covariance is an option to assess how two variables are
+related. 
+Positive Covariance: Indicates variable deviates from the mean, the other variable deviates in the same direction. 
+Negative Covariance: Indicates variable deviates from the mean (e.g.,
+increases), the other deviates from the mean in the opposite direction (e.g.,
+decreases).
+In student survey data set, covariance between 'Happiness' and 'TimeReading' shows that time of reading "TimeReading" is negatively impacting time being "Happiness". It has the negative covariance of -10.35. So if user being spend more timeon Time Reading, the reducing of Happiness like from watching TV etc... to their daily routine.**
+
+**b. Examine the Survey data variables. What measurement is being used for the variables? Explain what effect changing the measurement being used for the variables would have on the covariance calculation. Would this be a problem? Explain and provide a better alternative if needed. **
+
+**
+TimeReading: Using to represent how much time each student spends reading a day.
+TimeTV: Using to represent how much time each student spends watching TV a day.
+Happiness: Using to represent how much time each student spends being happy. DO not have specific scale to define how students being stay happy, like playing games, having fun/cultural activity, wathcing TV etc.. So has opporunity to factor this.
+Gender: Using to represents the gender of each student. We do not have exact represenstation of gender, like 0 mean men and 1 mean women or vice versa. So have opportunity to be converted as a factor.
+
+With the assumption of TimeTV given as in minutes and TimeReading given as in hours, using logic, has opporunity to conver TimeTV watching into hours.
+
+```{r, echo = FALSE}
+    student_df$TimeTV <- student_df$TimeTV / 60
+    kable (cov(student_df), caption = "Covariance Matrix for Student Survey data set")
+```
+
+
+**c. Choose the type of correlation test to perform, explain why you chose this test, and make a prediction if the test yields a positive or negative correlation?**
+
+**Pearson's Correlation: Though all types of correlation tests all return p-values. Indicating a high level of correlation in Pearson's Correlation may show confidence intervals as well as interval data
+
+```{r, echo = FALSE}
+ggplot(data = student_df, aes(x = TimeReading, y = TimeTV)) + geom_point() + geom_smooth(method='lm', formula= y~x, se = FALSE, color = "blue") + ylab("Time Watching TV") + xlab("Time Reading") + ggtitle("Student Survey")
+```
+
+
+**d. Perform a correlation analysis of:**
+
+    1. All variables
+
+```{r, echo = FALSE}
+cor.plot(student_df, scale = FALSE, cex = 1)
+```
+
+    2. A single correlation between two a pair of the variables
+
+```{r, echo = FALSE}
+with(student_df, cor.test(TimeReading, TimeTV, alternative="two.sided", method="pearson"))
+```
+
+```{r, echo = FALSE}
+ggplot(data = student_df, aes(x = TimeReading, y = TimeTV)) + geom_smooth(method='lm', formula= y~x, se = TRUE, color = "red", fill = "red", alpha = 0.3) + geom_point() + ylab("Time Watching TV") + xlab("Time Reading") + ggtitle("Student Survey")
+```
+
+    3. Repeat your correlation test in step 2 but set the confidence interval at 99%
+
+
+```{r, echo = FALSE}
+with(student_df, cor.test(TimeReading, TimeTV, alternative="two.sided", method="pearson", conf.level = 0.99))
+```
+    
+```{r, echo = FALSE}
+ggplot(data = student_df, aes(x = TimeReading, y = TimeTV)) + geom_smooth(method='lm', formula= y~x, se = TRUE, color = "red", fill = "red", alpha = 0.3, level = 0.99,) + geom_point() + ylab("Time Watching TV") + xlab("Time Reading") + ggtitle("Student Survey")
+```
+
+    4. Describe what the calculations in the correlation matrix suggest about the relationship between the variables. Be specific with your explanation.
+    
+**The correlation between `TimeTV` and `TimeReading` are highly negatively correlated. Means if students read more they are less happy and watching TV student are more happier since they had positive correlation. Also `Gender` is also some what correlated with `Happiness`.
+
+**e. Calculate the correlation coefficient and the coefficient of determination, describe what you conclude about the results.**
+
+```{r, echo = FALSE}
+#Correlation Coefficient
+cor(student_df)
+#Coefficient of Determination
+cor(student_df)^2
+```
+
+**
+Correlation Coefficient: Indicating a high level of negative correlation. 
+Coefficident of Determination: Indicating correlation coefficient squared, is a measure of the amount of variability in one variable that is shared by the other.
+In student survey correlation coefficient describes watching TV is negatively related to reading. With Coefficient of Determination shows the percent of reading is affected by watching TV. Matrix shows that the ~77% of the time the reading is affected by watching TV.
+
+
+**f. Based on your analysis can you say that watching more TV caused students to read less? Explain.**
+
+**Based on correlation test on student survey report, at high confidence that students wathcing more TV invest less time on reading. Also based on coefficient of determination determines as much as ~77% of the time reading time is affected by watching TV. 
+
+**g. Pick three variables and perform a partial correlation, documenting which variable you are “controlling”. Explain how this changes your interpretation and explanation of the results.**
+
+```{r, echo = FALSE}
+library(ggm)
+pcor(c( "TimeTV", "TimeReading", "Happiness"), var(student_df))
+```
+
+**Partial correlation analysis on attributes TimeTv, TimeReading and Happiness represents that the time watching TV is negatively affecting reading time as it showed negative correlation.
+
+
+# References
+(1) Slake for students feedback and reference comments.
+(2) DISCOVERING STATISTICS USING R -- ANDY FIELD | JEREMY MILES | ZOË FIELD
+(3) R for Everyone -- Second Edition
