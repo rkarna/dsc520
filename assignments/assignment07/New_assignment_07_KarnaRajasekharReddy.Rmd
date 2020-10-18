@@ -1,0 +1,192 @@
+---
+title: "ASSIGNMENT 7"
+author: "Rajasekhar Reddy Karna"
+date: '2020-10-18'
+output:
+  word_document: default
+  html_document: default
+  pdf_document: default
+bibliography: bibliography.bib
+---
+
+Work individually on this assignment. You are encouraged to collaborate on ideas and strategies pertinent to this assignment. Data for this assignment is focused on real estate transactions recorded from 1964 to 2016 and can be found in Week 6 Housing.xlsx. Using your skills in statistical correlation, multiple regression and R programming, you are interested in the following variables: Sale Price and several other possible predictors.
+Using your ‘clean’ data set from the previous week complete the following:
+##a. Explain why you chose to remove data points from your ‘clean’ dataset.
+
+##Response:
+Please refer announcement for week.
+
+```{r echo=FALSE}
+library(ggplot2)
+library(readxl)
+setwd("C:/Users/vahin/Documents/GitHub/dsc520/")
+housing_data <- read_xlsx("data/week-7-housing.xlsx")
+head(housing_data)
+```
+
+
+##b. Create two variables; one that will contain the variables Sale Price and Square Foot of Lot (same variables used from previous assignment on simple regression) and one that will contain Sale Price and several additional predictors of your choice. Explain the basis for your additional predictor selections.
+
+##Response:  
+As per outcome, all variables are positively correlated. Building grade and square feet of living room share aroudn 20% and 15% variation in determining sales price. So picked Building grade and Square feet of living are chosen as predictors for the model over year_built and bedrooms.
+
+```{r echo=FALSE}
+cor(housing_data$'Sale Price', housing_data$square_feet_total_living)^2 * 100
+cor.test(housing_data$'Sale Price', housing_data$square_feet_total_living)
+cor(housing_data$'Sale Price', housing_data$building_grade)^2 * 100
+cor.test(housing_data$'Sale Price', housing_data$building_grade)
+cor(housing_data$'Sale Price', housing_data$year_built)^2 * 100
+cor.test(housing_data$'Sale Price', housing_data$year_built)
+cor(housing_data$'Sale Price', housing_data$bedrooms)^2 * 100
+cor.test(housing_data$'Sale Price', housing_data$bedrooms)
+sales_price_with_sq_ft_lot <-  lm(housing_data$'Sale Price' ~ housing_data$sq_ft_lot, data = housing_data)
+sales_price_with_others <- lm(housing_data$'Sale Price' ~ housing_data$sq_ft_lot + housing_data$square_feet_total_living + housing_data$building_grade, data = housing_data)
+```
+
+##c. Execute a summary() function on two variables defined in the previous step to compare the model results. What are the R2 and Adjusted R2 statistics? Explain what these results tell you about the overall model. Did the inclusion of the additional predictors help explain any large variations found in Sale Price?
+
+##Response:
+
+For the first model R-Squared value is 0.014, which is 1.4% of variation in sale price. For the other two predictors, value increases to 0.213, or 21.3% of the variance in sale price. So a large amount of variation in sale price. R-squared and adjusted r-squared for the model shows difference almost ~0% (0.2131 - 0.2129).
+
+```{r echo=FALSE}
+summary(sales_price_with_sq_ft_lot)$r.squared
+summary(sales_price_with_others)$r.squared
+summary(sales_price_with_sq_ft_lot)$adj.r.squared
+summary(sales_price_with_others)$adj.r.squared
+summary(sales_price_with_sq_ft_lot)
+summary(sales_price_with_others)
+```
+
+##d. Considering the parameters of the multiple regression model you have created. What are the standardized betas for each parameter and what do the values indicate?
+
+##Response:
+
+The standardized beta estimates explains the number of standard deviations by which the outcome will change as a result of one standard deviation change in the predictor. The larger the beta, the stronger the effect. 
+
+In this case, 1 standard deviation of change in Sq_ft_lot causes sales price to change by 0.019 standard deviation, and for square_feet_total_living causes sales price to change by 0.361 standard deviation and for building_grade can cause 0.120 standard deviation change in sale price. 
+
+```{r echo=FALSE}
+lm.beta(sales_price_with_others)
+```
+
+##e. Calculate the confidence intervals for the parameters in your model and explain what the results indicate.
+
+##Response:
+
+Confidence interval shows that there is positive relation between all predictors and outcome. This helps to calculate how many data points may fall within a certain range when attempting to use the linear model. Assumption 90% of our data to fall within those ranges.
+
+```{r echo=FALSE}
+confint(sales_price_with_others, level = 0.90)
+```
+
+##f. Assess the improvement of the new model compared to your original model (simple regression model) by testing whether this change is significant by performing an analysis of variance.
+
+##Response: 
+The value in column labeled Pr(>F) is 2.2e−16 (i.e., 2.2 with the decimal
+place moved 16 places to the left, or a very small value indeed); we can say that sales_price_with_others significantly improved the fit of the model to the data compared to sales_price_with_sq_ft_lot.
+
+```{r echo=FALSE}
+anova(sales_price_with_sq_ft_lot)
+aov(sales_price_with_sq_ft_lot)
+anova(sales_price_with_others)
+aov(sales_price_with_others)
+```
+
+##g. Perform casewise diagnostics to identify outliers and/or influential cases, storing each function's output in a dataframe assigned to a unique variable name.
+
+```{r echo=FALSE}
+housing_data$standardized_residuals<- rstandard(sales_price_with_others)
+head(housing_data$standardized_residuals)
+housing_data$studentized_residuals<-rstudent(sales_price_with_others)
+head(housing_data$studentized_residuals)
+housing_data$dfbeta<-dfbeta(sales_price_with_others)
+head(housing_data$dfbeta)
+housing_data$dffit<-dffits(sales_price_with_others)
+head(housing_data$dffit)
+housing_data$leverage<-hatvalues(sales_price_with_others)
+head(housing_data$leverage)
+```
+
+##h. Calculate the standardized residuals using the appropriate command, specifying those that are +-2, storing the results of large residuals in a variable you create.
+
+```{r echo=FALSE}
+housing_data$large_residual <- housing_data$studentized_residuals > 2 | housing_data$studentized_residuals < -2
+```
+
+##i. Use the appropriate function to show the sum of large residuals.
+
+```{r echo=FALSE}
+sum(housing_data$large_residual)
+```
+
+##j. Which specific variables have large residuals (only cases that evaluate as TRUE)?
+
+```{r echo=FALSE}
+housing_data[housing_data$large_residual, c('Sale Price', 'sq_ft_lot', 'square_feet_total_living',  'building_grade', "standardized_residuals")]
+```
+
+##k. Investigate further by calculating the leverage, cooks distance, and covariance rations. Comment on all cases that are problematics.
+
+##Response:
+Out of 317 large residuals one value has cook distance greater than 1. Hence only 1 influential observation in the model.  Also couldn't find any problematic cases as per the data.
+
+```{r echo=FALSE}
+housing_data[housing_data$large_residual, c("cooks_distance", "leverage", "covariance_ratios")]
+cook_dist <- housing_data$cooks_distance > 1
+leverage <- housing_data$leverage
+covariance_ratios <- housing_data$covariance_ratios
+covariance_ratios
+sum(cook_dist)
+sum(leverage)
+sum(covariance_ratios)
+```
+
+##l. Perform the necessary calculations to assess the assumption of independence and state if the condition is met or not.
+
+##Response:
+Definition for Durbin Watson test reports:
+- 2 is no autocorrelation.
+- '0 to <2' is positive autocorrelation (common in time series data).
+- '>2 to 4' is negative autocorrelation (less common in time series data).
+
+Based on the Durbin watson test we can see the DWT-statistic value for the model is 0.52. Which means there is positive autocorrelation and the condition is met.
+
+```{r echo=FALSE}
+library(car)
+dwt(sales_price_with_others)
+dwtest(sales_price_with_others)
+```
+
+##m. Perform the necessary calculations to assess the assumption of no multicollinearity and state if the condition is met or not.
+
+##Response:
+VIF values are all well below 10 and the tolerance statistics all well above 0.2. Also, the average VIF is very close to 1. Based on these measures we can safely conclude that there is no collinearity within our data.
+
+```{r echo=FALSE}
+vif(sales_price_with_others)
+mean(vif(sales_price_with_others))
+```
+
+##n. Visually check the assumptions related to the residuals using the plot() and hist() functions. Summarize what each graph is informing you of and if any anomalies are present.
+
+Residuals vs fitted plot shows a fairly random pattern, which means the assumptions of linearity, randomness and homoscedasticity have been met. The Q-Q plot shows less normality but this can happen due to smaller sample than the population. 
+
+```{r echo=FALSE}
+plot(sales_price_with_others)
+hist(housing_data$studentized_residuals)
+```
+
+##0. Overall, is this regression model unbiased? If an unbiased regression model, what does this tell us about the sample vs. the entire population model?
+
+##Response:
+Based on the above plots looks like a normal distribution, we can say that the model is both accurate and generalized to the population. Overall relatively  unbiased.
+
+
+## References
+Discovering Statistics Using R
+R Markdown basics
+R for Everyone. Pearson Education, 2017
+https://rstudio.com/wp-content/uploads/2016/03/rmarkdown-cheatsheet-2.0.pdf?_ga=2.247973831.1388722509.1600630414-1304384236.1598891840
+Slake for students feedback and reference comments.
+Few points captured from the GitHub files of classmates.
