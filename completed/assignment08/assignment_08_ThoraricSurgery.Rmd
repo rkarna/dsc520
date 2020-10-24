@@ -1,0 +1,76 @@
+---
+title: "ASSIGNMENT 8"
+author: "Rajasekhar Reddy Karna"
+date: '2020-10-24'
+output:
+  word_document: default
+  html_document: default
+  pdf_document: default
+bibliography: bibliography.bib
+---
+##For this problem, you will be working with the thoracic surgery data set from the University of California Irvine machine learning repository. This dataset contains information on life expectancy in lung cancer patients after surgery.
+
+##The underlying thoracic surgery data is in ARFF format. This is a text-based format with information on each of the attributes. You can load this data using a package such as foreign or by cutting and pasting the data section into a CSV file.
+
+##Assignment Instructions:
+
+##Include all of your answers in a R Markdown report. Here is an example R Markdown report that you can use as a guide.
+
+##a. Fit a binary logistic regression model to the data set that predicts whether or not the patient survived for one year (the Risk1Y variable) after the surgery. Use the glm() function to perform the logistic regression. See Generalized Linear Models for an example. Include a summary using the summary() function in your results.
+
+```{r include=FALSE}
+library(ggplot2)
+library(readxl)
+options(warn=-1)
+library(tidyr)
+library(readr)
+library(foreign)
+library(caTools)
+setwd("C:/Users/vahin/Documents/GitHub/dsc520/")
+thoracic_surgery_df <- read.arff("data/ThoraricSurgery.arff")
+head(thoracic_surgery_df)
+str(thoracic_surgery_df)
+
+split<-sample.split(thoracic_surgery_df, SplitRatio=0.8)
+str(split)
+Split_True <- subset(thoracic_surgery_df, split="TRUE")
+str(Split_True)
+Split_False <- subset(thoracic_surgery_df, split="FALSE")
+str(Split_False)
+regression_all_variables<-glm(Risk1Yr ~  DGN + PRE4 + PRE5 + PRE6 + PRE7 + PRE8 + PRE9 + PRE10 +PRE14+ PRE11 + PRE17 + PRE19 + PRE25 + PRE30 + PRE32 + AGE, data = train, family = "binomial")
+summary(regression_all_variables)
+exp(regression_all_variables$coefficients)
+regression_selected_variables<-glm(Risk1Yr ~  DGN + PRE5 + PRE9 + PRE11 + PRE14+ PRE17 + PRE30, data = train, family = "binomial")
+summary(regression_selected_variables)
+```
+
+##b. According to the summary, which variables had the greatest effect on the survival rate?
+##Output Analysis: Seems PRE9 has highest P-value with positive correlation and it is having highest impact on the model.
+
+
+```{r include=FALSE}
+#Calculating accuracy for model with all variables
+result <- predict(regression_all_variables, Split_False, type="response")
+result <- predict(regression_all_variables, Split_True, type="response")
+confusion_matrix <- table(Actual_Value=Split_True$Risk1Yr, Predicted_Value= result >0.5)
+confusion_matrix
+#Accuracy calculation based on confusion matrix
+accuracy = (confusion_matrix[[1,1]] + confusion_matrix[[2,2]])/sum(confusion_matrix) * 100
+accuracy
+#Calculating accuracy for the 
+result <- predict(regression_selected_variables, Split_False, type="response")
+result <- predict(regression_selected_variables, Split_True, type="response")
+confusion_matrix <- table(Actual_Value=Split_True$Risk1Yr, Predicted_Value= result >0.5)
+confusion_matrix
+#Accuracy calculation based on confusion matrix
+accuracy = (confusion_matrix[[1,1]] + confusion_matrix[[2,2]])/sum(confusion_matrix) * 100
+accuracy
+```
+
+##c. To compute the accuracy of your model, use the dataset to predict the outcome variable. The percent of correct predictions is the accuracy of your model. What is the accuracy of your model?
+
+##Output Analysis: As per confusion matrix and accuracy calculation for both the models the best fit model has increased model accuracy by 84.25 - 83.61 = 0.64%. 
+
+## References
+Discovering Statistics Using R
+Open source like Github and Google searches.
