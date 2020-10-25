@@ -1,0 +1,73 @@
+---
+title: "ASSIGNMENT 8"
+author: "Rajasekhar Reddy Karna"
+date: '2020-10-24'
+output:
+  word_document: default
+  html_document: default
+  pdf_document: default
+bibliography: bibliography.bib
+---
+##Include all of your answers in a R Markdown report. Here is an example R Markdown report that you can use as a guide.
+
+##Fit a logistic regression model to the binary-classifier-data.csv dataset from the previous assignment.
+
+##a. What is the accuracy of the logistic regression classifier?
+##Output Analysis: Accuracy of 58.3%.
+
+```{r include=FALSE}
+options(warn=-1)
+library(tidyr)
+library(readr)
+library(foreign)
+library(caTools)
+library(class)
+library(caret)
+setwd("C:/Users/vahin/Documents/GitHub/dsc520/")
+classifier_df <- read.csv("data/binary-classifier-data.csv")
+head(classifier_df)
+str(classifier_df)
+summary(classifier_df)
+split<-sample.split(classifier_df, SplitRatio=0.8)
+str(split)
+train <- subset(classifier_df, split="TRUE")
+str(train)
+test <- subset(classifier_df, split="FALSE")
+str(test)
+logistic_model<-glm(label ~  x + y, data = train, family = "binomial")
+summary(logistic_model)
+result <- predict(logistic_model, test, type="response")
+result <- predict(logistic_model, train, type="response")
+confusion_matrix <- table(Actual_Value=train$label, Predicted_Value= result >0.5)
+confusion_matrix
+#Accuracy calculation based on confusion matrix
+(confusion_matrix[[1,1]] + confusion_matrix[[2,2]])/sum(confusion_matrix)
+#KNN implementation
+#The value of K is decided as square root of number of observations 
+sqrt(nrow(train))
+# Based on above value we get K = 38 or K = 39 (if we round to nearest integer)
+knn.38 <- knn(train=train, test=test, cl=train$label, k=38)
+knn.39 <- knn(train=train, test=test, cl=train$label, k=39)
+accuracy.38 <- 100 * sum(test$label == knn.38)/nrow(test)
+accuracy.38
+accuracy.39 <- 100 * sum(test$label == knn.39)/nrow(test)
+accuracy.39
+table(knn.38, test$label)
+table(knn.39, test$label)
+confusionMatrix(table(knn.39, test$label))
+```
+
+##b. How does the accuracy of the logistic regression classifier compare to the nearest neighbors algorithm?
+
+##Output Analysis: KNN is showing accuracy of 97.4%.
+
+
+##c. Why is the accuracy of the logistic regression classifier different from that of the nearest neighbors?
+
+##Output Analysis: Theoritically KNN is non parametric model and logistic regression is parametric model. KNN model showing higher accuracy than logistic regression. KNN tries to predict binary result by indicating outcome as 0 or 1 and LR tries to find the probability of outcome to have values retain between 0 and 1.  
+
+
+
+## References
+Discovering Statistics Using R
+Open source like Github and Google searches.
