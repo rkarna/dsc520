@@ -1,0 +1,81 @@
+---
+title: "ASSIGNMENT 9"
+author: "Rajasekhar Reddy Karna"
+date: '2020-11-01'
+output:
+  pdf_document: default
+  html_document: default
+  word_document: default
+---
+
+##In this problem, you will use the nearest neighbors algorithm to fit a model on two simplified datasets. The first dataset (found in binary-classifier-data.csv) contains three variables; label, x, and y. The label variable is either 0 or 1 and is the output we want to predict using the x and y variables. The second dataset (found in trinary-classifier-data.csv) is similar to the first dataset except that the label variable can be 0, 1, or 2.
+
+##Note that in real-world datasets, your labels are usually not numbers, but text-based descriptions of the categories (e.g. spam or ham). In practice, you will encode categorical variables into numeric values.
+
+##a. Plot the data from each dataset using a scatter plot.
+
+```{r}
+options(warn=-1)
+library(ggplot2)
+library(readr)
+library(foreign)
+library(caTools)
+library(class)
+library(caret)
+setwd("C:/Users/vahin/Documents/GitHub/dsc520/")
+bi_classifier_df <- read.csv("data/binary-classifier-data.csv")
+head(bi_classifier_df)
+str(bi_classifier_df)
+summary(bi_classifier_df)
+bi_classifier_df$label <- as.factor(bi_classifier_df$label)
+ggplot(bi_classifier_df, aes(x=x, y=y, color=label)) + geom_point() + ggtitle('Binary Classifier Data')
+tri_classifier_df <- read.csv("data/trinary-classifier-data.csv")
+head(tri_classifier_df)
+summary(tri_classifier_df)
+tri_classifier_df$label <- as.factor(tri_classifier_df$label)
+ggplot(tri_classifier_df, aes(x=x, y=y, color=label)) + geom_point() + ggtitle('Trinary Classifier Data')
+head(tri_classifier_df)
+str(tri_classifier_df)
+summary(tri_classifier_df)
+```
+
+##b. The k nearest neighbors algorithm categorizes an input value by looking at the labels for the k nearest points and assigning a category based on the most common label. In this problem, you will determine which points are nearest by calculating the Euclidean distance between two points. As a refresher, the Euclidean distance between two points:
+##p1=(x1, y1) 
+##and
+##p2=(x2,y2) 
+##is
+##d=
+##Fitting a model is when you use the input data to create a predictive model. There are various metrics you can use to determine how well your model fits the data. You will learn more about these metrics in later lessons. For this problem, you will focus on a single metric; accuracy. Accuracy is simply the percentage of how often the model predicts the correct result. If the model always predicts the correct result, it is 100% accurate. If the model always predicts the incorrect result, it is 0% accurate.
+##Fit a k nearest neighbors model for each dataset for k=3, k=5, k=10, k=15, k=20, and k=25. Compute the accuracy of the resulting models for each value of k. Plot the results in a graph where the x-axis is the different values of k and the y-axis is the accuracy of the model.
+
+```{r}
+set.seed(42)
+bi_split<-sample.split(bi_classifier_df, SplitRatio=0.80)
+tri_split<-sample.split(tri_classifier_df, SplitRatio=0.80)
+bi_train <- subset(bi_classifier_df, bi_split="TRUE")
+bi_test <- subset(bi_classifier_df, bi_split="FALSE")
+tri_train <- subset(tri_classifier_df, tri_split="TRUE")
+tri_test <- subset(tri_classifier_df, tri_split="FALSE")
+list_of_k <- list(3,5,10,15,20,25)
+accuracy_binary = 1
+for (i in list_of_k) {
+  knn_bi <- knn(train=bi_train, test=bi_train, cl=bi_train$label, k=i )
+  accuracy_binary[i] <- 100 * sum(bi_test$label == knn_bi)/nrow(bi_test)
+}
+accuracy_binary
+plot(accuracy_binary, type="b", xlab="K- Value",ylab="Accuracy", ylim = c(95,100), main = "Accuracy graph for Binary Classifier Data")
+accuracy_trinary = 1
+for (i in list_of_k) {
+  knn_tri <- knn(train=tri_train, test=tri_test, cl=tri_train$label, k=i )
+  accuracy_trinary[i] <- 100 * sum(tri_test$label == knn_tri)/nrow(tri_test)
+}
+accuracy_trinary
+plot(accuracy_trinary, type="b", xlab="K- Value",ylab="Accuracy", ylim = c(70,100), main = "Accuracy graph for Trinary Classifier Data")
+```
+
+##c. In later lessons, you will learn about linear classifiers. These algorithms work by defining a decision boundary that separates the different categories.
+##Looking back at the plots of the data, do you think a linear classifier would work well on these datasets?
+
+##Response Notes: No. As per scattered plot of the data is widly spread. Also value of K-Value & 'Accuracy' is dropping gradually. Linear classifier may be helpful because they will form a classification boundary based on the characteristics.
+
+
