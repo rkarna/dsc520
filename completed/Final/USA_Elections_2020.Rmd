@@ -1,0 +1,364 @@
+---
+title: "Final Project - US Election 2020 - Race to Presidential Election 2020 by County"
+author: "Rajasekhar Reddy Karna"
+date: '2020-11-20'
+output:
+  word_document: default
+  html_document: default
+  pdf_document: default
+---
+
+##Session 1:
+##•	Introduction:
+##Watching news from sometimes and most of the times the discussions are on 2020 elections related. Even while watching YouTube or any other online video stuff, so many promotions of 2020 year elections and representative. So, thought to work on Presidential Election 2020 dataset, which inheritance helps me also to learn how USA election system work. This would also help me to understand geographic details of USA too along with each political party influence in respective states / districts / county level.
+##•	Research questions:
+##Planning to identify the following questions to help investigate my problem statement.
+##o	How many presidential votes exist at count level?
+##o	How many candidate’s context in elections for presidential position from each party and number of votes individual got to be elected as presidential?
+##o	How many votes cumulatively used by citizen to elect presidential and any elector votes if exist any?
+##o	Are there any states / county level numbers so close by to determine the close proximity votes the losing party missed, which might help in future to recover from such counties. 
+##o	Along with governor elections data analysis, 
+##	How does data analysis look like for congress house representative elections?
+##	How does data analysis look like for governor representative elections?
+##	How does data analysis look like for senate representative elections?
+##•	Approach:
+##-	Perform dataset clean and identify variables.
+##-	Generate regression, correlation, basic summary, and descriptive statistics findings. 
+##-	Plot findings to visualize the data results.
+##•	How your approach addresses (fully or partially) the problem:
+##-	Approach may give data analysis at state level and county level each political party got votes. Also see if any cross votes between Presidential votes vs Governor votes vs Senate votes vs Congress house representative votes.
+##•	Data:
+##Reference: https://www.kaggle.com/unanimad/us-election-2020
+##File Names:
+##	governors_county_candidate.csv
+##	president_county_candidate.csv
+##•	Required Packages:
+##o	“dplyr” – to filter, arrange or select variables
+##o	“readxl” / “readr” – to read data from csv files
+##o	“ggplot2” – to visualize the data
+##o	“lubridate” – to work with the dates
+##o	“colorspace” – to add colors to my visualizations
+
+##•	Plots and Table Needs:
+##Scatterplots and Bar graphs ma provide most user friendly data analysis to give illustrate examples. 
+
+##•	Questions for future steps:
+##Need to do some exploratory search on how to apply a data analysis to see if any cross voting happened, as example presidential vote is to Republican party and Senate / Congress House vote is to Democratic party or other regional party based on available data. Since I am not very good on R programming yet with list of techniques and features it provides, will have to further research to determine which functions / libraries will provide best results to complete this project.
+
+##Section 2 
+##•	How to import and clean my data:
+##Response:
+##o	Uploaded the data set and importing county / state level shapefiles (.shp).
+##o	Capturing vector points based on available data in the sets.
+##o	Based on read data and conditional logics, identify the results outcome of each geo.state wide details.
+##o	Created data frame based on the relevant data.
+##o	On demand basis, converting all string data into lower cases to use for data comparison between 2 different data sets.
+##o	On demand basis changing the column headers to match between dataset for easy results plotting.
+##•	What does the final data set look like? 
+##Response:
+##o	Capturing different data parameters for analysis, sample as below:
+##o	 
+##o	 
+##o	 
+##o	etc…
+##•	What information is not self-evident?
+##Response:
+##o	The data sets I picked has sample basis data. Means, data between 2 data sets has many mismatches which resulting difficult to plot data as expected on maps. Looking for other possible options to capture data that is available and display blank/white cells data on maps. From my experience the very important points are to view the entire picture while working with data. Planning to take some peer help from individual on expertise on analyzing the data. 
+##•	What are different ways you could look at this data?
+##Response:
+##o	Data can be looked at many ways, like in USA elections, we can see data as winner in each geo.state and same time the same geo.state can be used to replicate the looser party too. Also identifying the data portions sharing by at each geo.state level, margin of winning and losing elections, etc.. All these parameters can be better used to display the right values on ggplots.
+##•	How do you plan to slice and dice the data?
+##Response:
+##o	Goal is to perform calculations and determine the elections winner at county level in each state and state level in the country. Also platter the party with color coding for better visibility. Also performing merging the data frames because of importance of data variable to use in data analysis. 
+##•	How could you summarize your data to answer key questions?
+##Response:
+##o	My plans to summarize the data based on calculated functions like sum(), levels(), max.col(), is.na(), group_by(), summarise(), etc… These all are providing good analysis information that I required to plot the details.
+##•	What types of plots and tables will help you to illustrate the findings to your questions? 
+##Response:
+##o	For this project, my plan is to show scatterplots and bar graphs to provide most user friendly data analysis to give illustrate examples. Also goal is to provide a markdown file and associative graphs along with narration of analysis. 
+##•	Do you plan on incorporating any machine learning techniques to answer your research questions? Explain.
+##Response:
+##o	I wish I could invest time on ML techniques. But as the chosen data is more of existing data based on completed results and still there is a provision that can be used for predictive analysis. Due to time constraint and current chosen taks does not necessarily require to add machine learning to this data set. I think the statistical procedures would give all expected outcome based on available data. 
+##•	Questions for future steps.
+##Response:
+##o	Goals is based on USA elections 2020 results data is plot two types of graphs. Questions are primarily how to meet the objective with less number of coding lines.
+##	At county level, with mouse hover should display votes Trump or Biden got along with Margin both had with the name of winner.
+##	Display final winner at state level with Blue and Red colors with mouse hover as well.
+
+##o	Challenges: 
+##	Currently having challenges to identify the winners of dataset based on different columns and rows specific wise.
+##	Currently having challenges to plot all details on a single plot to display 2 parties data at a time.
+
+
+### Coding for Presidential Elections
+
+```{r}
+options(warn=-1)
+#Defining all library files required to execute programming
+library(tidyr)
+library(dplyr)
+library(tibble)
+library(ggplot2)
+library(usmap)
+#Defining the data set path and importing data to perform analysis
+setwd("C:/Users/vahin/Documents/GitHub/dsc520/assignments/Final Project/")
+president_county <- read.csv("data/president_county_candidate.csv")
+president_county$party <- as.factor(president_county$party)
+
+# List total political parties contested in 2020 elections
+levels(president_county$party)
+
+#Removing candidates data from system of records for now
+president_county <- select(president_county, -candidate)
+president_county <- subset(president_county, party %in% c("DEM","REP","LIB","GRN"))
+
+#Total Votes gained by Democratic vs Republican parties
+filter_Rep_Dem <- filter(president_county, party %in% c("DEM", "REP"))
+filter_Rep_Dem %>% 
+  group_by(party) %>% 
+  summarise(Total_Votes = sum(votes, na.rm = TRUE))
+
+# Since there are multiple counties named the same way, adding a new attribute that will combine the first two columns together and then parse them our later.
+president_county$state_county <- as.factor(paste(president_county$state,president_county$county, sep = "_and_"))
+president_county <- select(president_county, -state, -county)
+#view the holistic data of state and county level details
+head(president_county)
+summary(president_county)
+#Spread the data in such a way each party received total number of votes at county level
+new_president_county <- spread(president_county, key = party, value = votes)
+head(new_president_county)
+#Now parse the state and county individually
+new_president_county <- separate(new_president_county, state_county, c("State","County") , sep = "_and_")
+head(new_president_county, 50)
+#if any party didn't get vote, mark such values (NA) to 0
+new_president_county[is.na(new_president_county)] <- 0
+parties <- c("DEM","GRN","LIB","REP")
+#Capture the winning party from each county and add to the new column as 'winner'
+new_president_county$winner <- parties[max.col(new_president_county[3:ncol(new_president_county)])]
+head(new_president_county, 50)
+
+#Plot the graph at state level
+all_states <- map_data("state")
+# Taking off the county and winner from the dataset to plot state wide results
+new_president_state <- select(new_president_county, -County, -winner)
+# Grouping the data at state level based on number of votes got by each party
+new_president_state <- group_by(new_president_state, State) %>% summarise_all(sum)
+head (new_president_state)
+# Capture the winning party from each state and add to the new column as 'winner'
+new_president_state$winner <- parties[max.col(new_president_state[2:ncol(new_president_state)])]
+head(new_president_state, 50)
+
+#Creating subset data with the winner as Democratic or Repulican party at state level
+demwins <- subset(new_president_state, winner == "DEM")
+repwins <- subset(new_president_state, winner == "REP")
+
+# To match the state names in map_data vs data set actual data, defining all geo.states into lower cases
+blu <- tolower(as.vector(unique(demwins$State)))
+rd <- tolower(as.vector(unique(repwins$State)))
+
+#Plot the state wide election results got by DEM or REP parties
+state_results <- ggplot(all_states, aes(x=long, y=lat, group = group)) +
+  geom_polygon(fill="blue", data = filter(all_states, region %in% blu)) +
+  geom_polygon(fill="red", data = filter(all_states, region %in% rd)) + 
+  geom_polygon(color = "black", alpha = 0.1)
+state_results
+
+#Plot the graph at county level
+all_counties <- map_data("county")
+# grouping details at county level in each state based on subregion values
+all_counties$merge <- paste(all_counties$region,all_counties$subregion, sep = "_and_")
+all_counties$merge <- gsub(" ","",all_counties$merge)
+
+# To match the county and state names in map_data vs data set actual data, defining all counties and states into lower cases
+new_president_county$County <- tolower(gsub(paste0(c("County","Parish"),collapse = "|"),"", new_president_county$County))
+new_president_county$merge <- tolower(paste(new_president_county$State, new_president_county$County, sep = "_and_"))
+
+# grouping details at county level based on merged state & county data
+new_president_county$merge <- gsub(" ","",new_president_county$merge)
+
+#Creating subset data with the winner as Democratic or Repulican party at county level
+demwins <- subset(new_president_county, winner == "DEM")
+repwins <- subset(new_president_county, winner == "REP")
+
+# To match the county names in map_data vs data set actual data, defining all counties into lower cases
+blu <- tolower(as.vector(unique(demwins$merge)))
+rd <- tolower(as.vector(unique(repwins$merge)))
+
+#Plot the county wide election results got by DEM or REP parties
+county_results <- ggplot(all_counties, aes(x=long, y=lat, group = group)) +
+  geom_polygon(fill="blue", data = filter(all_counties, merge %in% blu)) +
+  geom_polygon(fill="red", data = filter(all_counties, merge %in% rd)) +
+  geom_polygon(color = "white", alpha = 0.1)
+county_results
+```
+
+
+### Coding for Governor Elections in USA occured along with Presidential Elections. Happened in 12 geo.states:
+# Delaware, Indiana, Missouri, Montana, New Hampshire, North Carolina, North Dakota, Utah, Vermont, Washington, West Virginia
+
+```{r}
+options(warn=-1)
+#Defining all library files required to execute programming
+library(tidyr)
+library(dplyr)
+library(tibble)
+library(ggplot2)
+library(usmap)
+#Defining the data set path and importing data to perform analysis
+setwd("C:/Users/vahin/Documents/GitHub/dsc520/assignments/Final Project/")
+governor_county <- read.csv("data/governors_county_candidate.csv")
+governor_county$party <- as.factor(governor_county$party)
+
+# List total political parties contested in 2020 elections
+levels(governor_county$party)
+
+#Removing candidates data from system of records for now
+governor_county <- select(governor_county, -candidate)
+governor_county <- subset(governor_county, party %in% c("DEM","REP","LIB","GRN"))
+
+#Total Votes gained by Democratic vs Republican parties
+filter_Rep_Dem <- filter(governor_county, party %in% c("DEM", "REP"))
+filter_Rep_Dem %>% 
+  group_by(party) %>% 
+  summarise(Total_Votes = sum(votes, na.rm = TRUE))
+
+# Since there are multiple counties named the same way, adding a new attribute that will combine the first two columns together and then parse them our later.
+governor_county$state_county <- as.factor(paste(governor_county$state,governor_county$county, sep = "_and_"))
+governor_county <- select(governor_county, -state, -county)
+#view the holistic data of state and county level details
+head(governor_county)
+summary(governor_county)
+#Spread the data in such a way each party received total number of votes at county level
+new_governor_county <- spread(governor_county, key = party, value = votes)
+head(new_governor_county)
+#Now parse the state and county individually
+new_governor_county <- separate(new_governor_county, state_county, c("State","County") , sep = "_and_")
+head(new_governor_county, 50)
+#if any party didn't get vote, mark such values (NA) to 0
+new_governor_county[is.na(new_governor_county)] <- 0
+parties <- c("DEM","GRN","LIB","REP")
+#Capture the winning party from each county and add to the new column as 'winner'
+new_governor_county$winner <- parties[max.col(new_governor_county[3:ncol(new_governor_county)])]
+head(new_governor_county, 50)
+
+#Plot the graph at state level
+all_states <- map_data("state")
+# Taking off the county and winner from the dataset to plot state wide results
+new_governor_state <- select(new_governor_county, -County, -winner)
+# Grouping the data at state level based on number of votes got by each party
+new_governor_state <- group_by(new_governor_state, State) %>% summarise_all(sum)
+head (new_governor_state)
+# Capture the winning party from each state and add to the new column as 'winner'
+new_governor_state$winner <- parties[max.col(new_governor_state[2:ncol(new_governor_state)])]
+head(new_governor_state, 50)
+
+#Creating subset data with the winner as Democratic or Repulican party at state level
+demwins <- subset(new_governor_state, winner == "DEM")
+repwins <- subset(new_governor_state, winner == "REP")
+
+# To match the state names in map_data vs data set actual data, defining all geo.states into lower cases
+blu <- tolower(as.vector(unique(demwins$State)))
+rd <- tolower(as.vector(unique(repwins$State)))
+
+#Plot the state wide election results got by DEM or REP parties
+state_results <- ggplot(all_states, aes(x=long, y=lat, group = group)) +
+  geom_polygon(fill="blue", data = filter(all_states, region %in% blu)) +
+  geom_polygon(fill="red", data = filter(all_states, region %in% rd)) + 
+  geom_polygon(color = "black", alpha = 0.1)
+state_results
+
+#Plot the graph at county level
+all_counties <- map_data("county")
+# grouping details at county level in each state based on subregion values
+all_counties$merge <- paste(all_counties$region,all_counties$subregion, sep = "_and_")
+all_counties$merge <- gsub(" ","",all_counties$merge)
+
+# To match the county and state names in map_data vs data set actual data, defining all counties and states into lower cases
+new_governor_county$County <- tolower(gsub(paste0(c("County","Parish"),collapse = "|"),"", new_governor_county$County))
+new_governor_county$merge <- tolower(paste(new_governor_county$State, new_governor_county$County, sep = "_and_"))
+
+# grouping details at county level based on merged state & county data
+new_governor_county$merge <- gsub(" ","",new_governor_county$merge)
+
+#Creating subset data with the winner as Democratic or Repulican party at county level
+demwins <- subset(new_governor_county, winner == "DEM")
+repwins <- subset(new_governor_county, winner == "REP")
+
+# To match the county names in map_data vs data set actual data, defining all counties into lower cases
+blu <- tolower(as.vector(unique(demwins$merge)))
+rd <- tolower(as.vector(unique(repwins$merge)))
+
+#Plot the county wide election results got by DEM or REP parties
+county_results <- ggplot(all_counties, aes(x=long, y=lat, group = group)) +
+  geom_polygon(fill="blue", data = filter(all_counties, merge %in% blu)) +
+  geom_polygon(fill="red", data = filter(all_counties, merge %in% rd)) +
+  geom_polygon(color = "white", alpha = 0.1)
+county_results
+```
+
+
+
+
+##Section 3 
+##•	A story / narrative that emerged from your data. Follow this structure.
+##o	Introduction:
+#Watching USA news from sometime and most of the times the discussions are on 2020 USA presidential elections related. Even while watching YouTube or any other online videos, many promotions are associated to 2020 year elections and representative. So, thought to work on Presidential Election 2020 data set, which inheritance helped me to learn how USA election system working. This also helped me to understand geographic details of USA along with each political party influence in respective states / districts / county level in age of 2020.
+
+#The data set has been captured from Kaggle in CSV file format and it contains data of presidential and governor elections happened in few geo.states across USA. The provided data contains information like geo.state with in USA, county in each geo.state, candidate contested in elections, associate candidate polical party details along with total votes gained by each party to win the 2020 elections.
+
+#Considering the fact of provided data has more insights and metrics are more helpful to create relationship between attributes. By developing various plots at state and county level, summary tables, visualization got an opportunity to show case various dimension of election results data analysis. Through this clear graphical observations were able to be to tell the winning party at county, state and county level both for Presidential and Governor elections.
+
+
+##o	The problem statement you addressed:
+# Initially I faced separate the data based on political party and total number of votes captured in each county level. Since the political party data present in row wise, converting it to column level become little hurdle. To plot the data at each state level and county level winning parties based on number of votes, summed data with group by function which eventually printed same in plot with color codes.
+
+
+##o	How you addressed this problem statement:
+#A step by step process has been take into consideration to address the problem statements and plot the details in graphical visible format.
+#1. Analysis and Data Preparation:
+# - Captured data from Kaggela and loaded the same through read.csv function in R
+# - Analyzed the data to get initial understand of avaiable attributes and possible solutions that can be articulated with R programming
+# - While programming, intalled and loaded all the required Libraries needed for project.
+# - On needed named the columns names and also converted into lower case letters to make comparision success.
+
+#2. Clean Up:
+# - Removed not requried data columns
+# - Spread the data based on political party and total votes gained at rount level
+# - Initially combined state and county level since there is possibility of having same county in differnt state. By combining, would be able to create unique identified and able to separate data for each political party. 
+# - Defining 0, if any particular political party hasn't got any vote in a given county region
+# - Captured winning party based on max votes gainied by the party at state or county level and added the winner in a new column.
+
+#3. Data Analysis and Plots:
+# - Created subset of each party details (picked major leading parties only into consideration)
+# - Also converted state and county names into lower case to match with the usa mapping details.
+# - Plotted the details with party color symbols to make more realistic representation.
+
+##o	Analysis:
+# The main reference and objective of this project is to plot the winning party of USA 2020 elections in each county and state level based on number of votes gaining by each party (predominently either Democratic or Republican party)
+#Presidential Elections:
+# Based on statistical analysis made on available data, the clear victory is given to Democratic party in majority geo.state. 
+# In terms of total votes gained at party level for Presidential elections, Democratic party earned total of 75151734 votes & Republican party earned total of 70615593 votes.
+# There is a margin of 4536131 votes Republican party lost the winning USA 2020 elections against Democratic party.
+# Out of 50 geo.states in USA, 24 geo.states given winning numbers to Republican party and remaining 26 geo.states given winnding numbers to Democratic party in Presidential elections.
+# Based on county level graph for Presidential elections, though the color is showing more of red (Republican party), based on density of people total votes turned to blue (Domocratic party) overal.
+#Governer Elections:
+# Based on statistical analysis made on available data, the clear victory is given to Republican party in majority geo.state. 
+# In terms of total votes gained at party level for Governer elections, Democratic party earned total of 8749024 votes & Republican party earned total of 10339911 votes.
+# There is a margin of 1590887 votes Democratic party lost the winning USA 2020 Governer elections against Republican party for vote casting happened in 11 geo.states.
+# Out of 11 geo.states in USA, 8 geo.states given winning numbers to Republican party and remaining 3 geo.states given winnding numbers to Democratic party in Governer elections.
+# Based on county level graph for Governer elections, Republican party showed clear majority at many places.
+# Even in 3 geo.state lost by Republican party, total counties owned by Republican party. But based on people density in remaining county regions is more compared with regions own by republican party, win goes to Democratic party.
+
+
+##o	Implications. 
+# Observed the overall counties won by Replican party in Presidential elections, due to people density living in other counties is more than geographic location. Offcourse the people density depends on many parameters like city and suburban regions etc..
+# In 2 geo states though Presidential elections got majority for Democratic party, the Governor elections results winning given to Repulican party. Same way in 1 geo state though Presidential electiosn got majority for Republican party, the Governor elections results winning given to Democratic party. This is giving a clear representation of cross voting happened between Presidential elections vs Governor elections. This also giving a clear representation of people casting votes based on candidate contesting in elections, not only on basis of policatical party symbol / color.
+
+
+##o	Limitations. 
+# The main point, this project analysis, data preparation and execution empowered me to study and understand the USA elections 2020 results based on geo.states as well as governor elections. This gave me the insight about how geo.graphically a political party taking opportunities to keep their winning strategies. 
+# I feel that, we can leverage this project analysis further to perform cross voting happened at each county level by comparing Presidential elections and Governor elections. This might give an increased predictive model anaysis for future elections for Governor elections in geo.states. 
+# Also I feel that, we can leverage this project analysis data to plot different types of graphs with mouse cursor data display at each county and geo.state level with the margin votes own by each contested candidate for both PResidential and Governor elections.
+
+##o	Concluding Remarks
+# Yes, a very good opportunity to learn R programming and convert some foundational level learning points from the class course into project needs in real time. Since data analysis has boundaryless opportunities, has ways to plot data in many ways to read different combinations for future data references. A bottom line, a lot more to learn in data analysis and it is continous journey and it changes based on business needs and demands.
